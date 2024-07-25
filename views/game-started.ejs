@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Started</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <header>
+        <h1>Game Started</h1>
+    </header>
+    <main>
+        <p>Welcome to the game, <strong><%= player.name %></strong>!</p>
+        <p>You are: <strong><%= player.role %></strong></p>
+        <% if (sheriff) { %>
+            <p>The Sheriff is: <strong><%= sheriff.name %></strong></p>
+        <% } %>
+        <% if (mostWanted) { %>
+            <p><%= townCode %>'s Most Wanted is: <strong><%= mostWanted.name %></strong></p>
+        <% } %>
+    </main>
+</body>
+</html>

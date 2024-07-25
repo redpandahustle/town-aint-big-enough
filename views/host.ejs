@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Host Game</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <header>
+        <h1>Host Game</h1>
+    </header>
+    <main>
+        <p>Share this code with players to join: <%= townCode %></p>
+        <form action="/start/<%= townCode %>" method="POST">
+            <button type="submit">Start Game</button>
+        </form>
+    </main>
+</body>
+</html>

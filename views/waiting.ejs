@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Waiting Room</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <header>
+        <h1>Waiting Room</h1>
+    </header>
+    <main>
+        <ul id="player-list">
+            <% players.forEach(player => { %>
+                <li><%= player %></li>
+            <% }) %>
+        </ul>
+        <% if (message) { %>
+            <p><%= message %></p>
+        <% } %>
+        <% if (isHost) { %>
+            <form id="start-game-form">
+                <button id="start-game-button" type="button" disabled>Start Game<br><span>waiting for enough players...</span></button>
+            </form>
+        <% } %>
+        <p id="notice">Waiting for enough players to join...</p>
+    </main>
+    <script>
+        const townCode = "<%= townCode %>";
+        const playerName = "<%= playerName %>" || localStorage.getItem('playerName');
+        const playerList = document.getElementById('player-list');
+        const startGameButton = document.getElementById('start-game-button');
+        const notice = document.getElementById('notice');
+        const ws = new WebSocket(`ws://${window.location.host}`);
+
+        ws.onmessage = function(event) {
+            const message = JSON.parse(event.data);
+            if (message.action === 'startGame' && message.townCode === townCode) {
+                window.location.href = `/game-started/${townCode}/${playerName}`;
+            }
+        };
+
+        async function fetchPlayers() {
+            const response = await fetch(`/api/players/${townCode}`);
+            const players = await response.json();
+            playerList.innerHTML = players.map(player => `<li>${player.name}</li>`).join('');
+            if (players.length >= 5 && players.length <= 10) {
+                startGameButton.disabled = false;
+                notice.textContent = '';
+            } else {
+                startGameButton.disabled = true;
+                notice.textContent = 'Waiting for enough players to join...';
+            }
+        }
+
+        async function startGame() {
+            const response = await fetch(`/start/${townCode}`, { method: 'POST' });
+            const result = await response.json();
+            if (result.message === 'Game started') {
+                window.location.href = `/game-started/${townCode}/${playerName}`;
+            }
+        }
+
+        if (startGameButton) {
+            startGameButton.addEventListener('click', startGame);
+        }
+
+        setInterval(fetchPlayers, 3000); // Poll every 3 seconds
+    </script>
+</body>
+</html>

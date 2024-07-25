@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Join Town</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <header>
+        <h1>Settle in an Existing Town</h1>
+    </header>
+    <main>
+        <form action="/join" method="POST">
+            <input type="text" name="townCode" placeholder="Enter Town Code" required>
+            <input type="text" name="playerName" placeholder="Enter Your Name" required>
+            <button type="submit">Join the Town</button>
+        </form>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const playerNameInput = document.querySelector('input[name="playerName"]');
+            const joinForm = document.querySelector('form[action="/join"]');
+
+            joinForm.addEventListener('submit', function() {
+                localStorage.setItem('playerName', playerNameInput.value);
+            });
+        });
+    </script>
+</body>
+</html>
